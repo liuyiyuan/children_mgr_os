@@ -92,6 +92,11 @@ const GrowthRecordPage: React.FC = () => {
 
   const childAgeMonths = selectedChild ? calculateAgeInMonths(selectedChild.birthDate) : 0;
 
+  const getStandardValue = (standard: any[], months: number, gender?: string): number => {
+    const point = standard.find(p => p.month <= months)?.[gender === 'male' ? 'boy' : 'girl'] || 0;
+    return point as number;
+  };
+
   // 获取选中儿童的生长记录
   const childRecords = useMemo(() => {
     if (!selectedChild) return [];
@@ -157,11 +162,6 @@ const GrowthRecordPage: React.FC = () => {
     
     return data.sort((a, b) => a.age - b.age);
   }, [childRecords, whoStandardWeight, selectedChild]);
-
-  const getStandardValue = (standard: any[], months: number, gender?: string): number => {
-    const point = standard.find(p => p.month <= months)?.[gender === 'male' ? 'boy' : 'girl'] || 0;
-    return point as number;
-  };
 
   const handleOpenDialog = () => {
     if (!selectedChild) {

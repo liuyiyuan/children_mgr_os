@@ -129,7 +129,7 @@ export default function Layout() {
                   <ListItemIcon sx={{ minWidth: 0, mr: sidebarCollapsed ? 0 : 2, justifyContent: 'center', color: 'inherit' }}>
                     {item.icon}
                   </ListItemIcon>
-                  {!sidebarCollapsed && <ListItemText primary={item.label} primaryTypographyProps={{ fontSize: 14, fontWeight: isActive ? 600 : 400 }} />}
+                  {!sidebarCollapsed && <ListItemText primary={item.label} sx={{ '& .MuiTypography-root': { fontSize: 14, fontWeight: isActive ? 600 : 400 } }} />}
                 </ListItemButton>
               </ListItem>
             );
@@ -155,7 +155,7 @@ export default function Layout() {
                       <ListItemIcon sx={{ minWidth: 0, mr: sidebarCollapsed ? 0 : 2, justifyContent: 'center', color: 'inherit' }}>
                         {item.icon}
                       </ListItemIcon>
-                      {!sidebarCollapsed && <ListItemText primary={item.label} primaryTypographyProps={{ fontSize: 14, fontWeight: isActive ? 600 : 400 }} />}
+                      {!sidebarCollapsed && <ListItemText primary={item.label} sx={{ '& .MuiTypography-root': { fontSize: 14, fontWeight: isActive ? 600 : 400 } }} />}
                     </ListItemButton>
                   </ListItem>
                 );

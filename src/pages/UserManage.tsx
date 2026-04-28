@@ -37,7 +37,7 @@ import { useAuthStore } from '../stores/authStore';
 import { User } from '../types';
 
 const UserManage: React.FC = () => {
-  const { currentUser } = useAuthStore();
+  const { user: currentUser } = useAuthStore();
   const [users, setUsers] = useState<User[]>(() => {
     const stored = localStorage.getItem('users');
     return stored ? JSON.parse(stored) : [
@@ -45,9 +45,7 @@ const UserManage: React.FC = () => {
         id: '1',
         username: 'admin',
         password: 'admin123',
-        displayName: '系统管理员',
         role: 'admin',
-        email: 'admin@example.com',
         phone: '13800138000',
         createdAt: new Date().toISOString(),
       },
@@ -55,9 +53,7 @@ const UserManage: React.FC = () => {
         id: '2',
         username: 'parent1',
         password: '123456',
-        displayName: '张三',
         role: 'parent',
-        email: 'zhangsan@example.com',
         phone: '13900139000',
         createdAt: new Date().toISOString(),
       },
@@ -69,10 +65,8 @@ const UserManage: React.FC = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    displayName: '',
-    role: 'parent' as 'admin' | 'parent',
-    email: '',
     phone: '',
+    role: 'parent' as 'admin' | 'parent',
   });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
@@ -92,10 +86,8 @@ const UserManage: React.FC = () => {
     setFormData({
       username: '',
       password: '',
-      displayName: '',
-      role: 'parent',
-      email: '',
       phone: '',
+      role: 'parent',
     });
     setOpenDialog(true);
   };
@@ -105,17 +97,15 @@ const UserManage: React.FC = () => {
     setFormData({
       username: user.username,
       password: '',
-      displayName: user.displayName || '',
-      role: user.role,
-      email: user.email || '',
       phone: user.phone || '',
+      role: user.role,
     });
     setOpenDialog(true);
   };
 
   const handleSave = () => {
-    if (!formData.username || !formData.password || !formData.displayName) {
-      setSnackbar({ open: true, message: '请填写必填字段', severity: 'error' });
+    if (!formData.username || !formData.password || !formData.phone) {
+      setSnackbar({ open: true, message: '请填写必填字段（账号、密码、手机号）', severity: 'error' });
       return;
     }
 
@@ -178,11 +168,9 @@ const UserManage: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>用户</TableCell>
-                  <TableCell>用户名</TableCell>
+                  <TableCell>账号</TableCell>
+                  <TableCell>手机号</TableCell>
                   <TableCell>角色</TableCell>
-                  <TableCell>邮箱</TableCell>
-                  <TableCell>电话</TableCell>
                   <TableCell>创建时间</TableCell>
                   <TableCell align="center">操作</TableCell>
                 </TableRow>
@@ -196,11 +184,11 @@ const UserManage: React.FC = () => {
                           {user.role === 'admin' ? <AdminIcon /> : <UserIcon />}
                         </Avatar>
                         <Typography variant="body2" fontWeight={600}>
-                          {user.displayName}
+                          {user.username}
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.phone || '-'}</TableCell>
                     <TableCell>
                       <Chip
                         label={user.role === 'admin' ? '管理员' : '家长'}
@@ -208,8 +196,6 @@ const UserManage: React.FC = () => {
                         size="small"
                       />
                     </TableCell>
-                    <TableCell>{user.email || '-'}</TableCell>
-                    <TableCell>{user.phone || '-'}</TableCell>
                     <TableCell>
                       {new Date(user.createdAt).toLocaleDateString()}
                     </TableCell>
@@ -239,13 +225,7 @@ const UserManage: React.FC = () => {
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
-              label="显示名称"
-              fullWidth
-              value={formData.displayName}
-              onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-            />
-            <TextField
-              label="用户名"
+              label="账号"
               fullWidth
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -259,6 +239,12 @@ const UserManage: React.FC = () => {
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               placeholder={editUser ? '留空则不修改密码' : ''}
             />
+            <TextField
+              label="手机号"
+              fullWidth
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            />
             <FormControl fullWidth>
               <InputLabel>角色</InputLabel>
               <Select
@@ -270,19 +256,6 @@ const UserManage: React.FC = () => {
                 <MenuItem value="parent">家长</MenuItem>
               </Select>
             </FormControl>
-            <TextField
-              label="邮箱"
-              type="email"
-              fullWidth
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-            <TextField
-              label="电话"
-              fullWidth
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            />
           </Box>
         </DialogContent>
         <DialogActions>
